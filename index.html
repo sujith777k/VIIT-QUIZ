@@ -3,1194 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artificial Neural Networks Quiz</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Header Styles */
-        .header {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 4px solid #d8b4fe;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .brain-icon {
-            font-size: 48px;
-            color: #9333ea;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .header-title h1 {
-            font-size: 36px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #9333ea, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-title p {
-            color: #6b7280;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .score-box {
-            background: linear-gradient(135deg, #34d399, #10b981);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-            transition: transform 0.3s;
-        }
-
-        .score-box:hover {
-            transform: scale(1.05);
-        }
-
-        .score-box i {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .score-number {
-            font-size: 28px;
-            font-weight: 900;
-        }
-
-        .score-label {
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .reset-btn {
-            background: linear-gradient(135deg, #ef4444, #ec4899);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-            font-size: 16px;
-        }
-
-        .reset-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
-        }
-
-        /* Progress Bar */
-        .progress-section {
-            margin-top: 20px;
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 10px;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 16px;
-            background: #d1d5db;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #9333ea, #ec4899);
-            border-radius: 20px;
-            transition: width 0.5s ease;
-        }
-
-        /* Main Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Questions List */
-        .questions-list {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            border: 4px solid #93c5fd;
-            max-height: 700px;
-            overflow-y: auto;
-        }
-
-        .questions-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .questions-header i {
-            font-size: 28px;
-            color: #2563eb;
-        }
-
-        .questions-header h2 {
-            font-size: 24px;
-            font-weight: 900;
-            color: #1f2937;
-        }
-
-        .question-item {
-            width: 100%;
-            padding: 16px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .question-item.default {
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .question-item.default:hover {
-            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
-            transform: scale(1.02);
-        }
-
-        .question-item.attempted {
-            background: linear-gradient(135deg, #34d399, #10b981);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .question-item.attempted:hover {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-
-        .question-item.attempted-wrong {
-            background: linear-gradient(135deg, #f87171, #ef4444);
-            color: white;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .question-item.attempted-wrong:hover {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-
-        .question-item.selected {
-            background: linear-gradient(135deg, #2563eb, #9333ea);
-            color: white;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-            transform: scale(1.05);
-            border: 2px solid #fbbf24;
-        }
-
-        .question-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .question-number {
-            font-size: 18px;
-            font-weight: 900;
-        }
-
-        .check-icon {
-            font-size: 20px;
-            animation: bounce 1s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .question-category {
-            font-size: 12px;
-            margin-top: 5px;
-            opacity: 0.8;
-            font-weight: 600;
-        }
-
-        /* Question Display */
-        .question-display {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-            border: 4px solid #c7d2fe;
-        }
-
-        .welcome-screen {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .welcome-icon {
-            font-size: 128px;
-            color: #c084fc;
-            margin-bottom: 30px;
-            animation: bounce 2s infinite;
-        }
-
-        .welcome-title {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #9333ea, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-        }
-
-        .welcome-text {
-            color: #6b7280;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 40px;
-        }
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .category-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .category-badge {
-            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-
-        .category-badge:hover {
-            transform: scale(1.05);
-        }
-
-        .question-content .category-badge-top {
-            display: inline-block;
-            background: linear-gradient(135deg, #9333ea, #ec4899);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 900;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
-        }
-
-        .question-title {
-            font-size: 28px;
-            font-weight: 900;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-
-        .question-text {
-            font-size: 22px;
-            color: #374151;
-            font-weight: 600;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        /* Answer Options */
-        .options-container {
-            margin-bottom: 30px;
-        }
-
-        .option-btn {
-            width: 100%;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 16px;
-            border: 2px solid #d1d5db;
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            text-align: left;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, #e0e7ff, #ddd6fe);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            transform: scale(1.02);
-        }
-
-        .option-btn:disabled {
-            cursor: not-allowed;
-        }
-
-        .option-btn.correct {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: 4px solid #86efac;
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-            transform: scale(1.05);
-            animation: pulse-correct 0.5s;
-        }
-
-        @keyframes pulse-correct {
-            0%, 100% { transform: scale(1.05); }
-            50% { transform: scale(1.08); }
-        }
-
-        .option-btn.incorrect {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: 4px solid #fca5a5;
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
-            transform: scale(1.05);
-            animation: pulse-incorrect 0.5s;
-        }
-
-        @keyframes pulse-incorrect {
-            0%, 100% { transform: scale(1.05); }
-            50% { transform: scale(1.08); }
-        }
-
-        .option-btn.show-correct {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: 4px solid #86efac;
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .option-letter {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .option-text {
-            flex: 1;
-        }
-
-        .option-icon {
-            font-size: 32px;
-            animation: bounce 1s infinite;
-        }
-
-        /* Feedback Box */
-        .feedback-box {
-            padding: 30px;
-            border-radius: 16px;
-            border: 4px solid;
-            margin-top: 20px;
-        }
-
-        .feedback-box.correct {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0, #d1fae5);
-            border-color: #34d399;
-            box-shadow: 0 8px 25px rgba(52, 211, 153, 0.3);
-        }
-
-        .feedback-box.incorrect {
-            background: linear-gradient(135deg, #fee2e2, #fecaca, #fee2e2);
-            border-color: #f87171;
-            box-shadow: 0 8px 25px rgba(248, 113, 113, 0.3);
-        }
-
-        .feedback-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .feedback-icon {
-            font-size: 32px;
-        }
-
-        .feedback-icon.correct {
-            color: #047857;
-        }
-
-        .feedback-icon.incorrect {
-            color: #b91c1c;
-        }
-
-        .feedback-title {
-            font-size: 24px;
-            font-weight: 900;
-        }
-
-        .feedback-title.correct {
-            color: #065f46;
-        }
-
-        .feedback-title.incorrect {
-            color: #991b1b;
-        }
-
-        .feedback-text {
-            color: #1f2937;
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        .footer {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            margin-top: 30px;
-            text-align: center;
-            border: 4px solid #fde68a;
-        }
-
-        .footer-title {
-            color: #374151;
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .footer-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Scrollbar Styles */
-        .questions-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .questions-list::-webkit-scrollbar-track {
-            background: #f3f4f6;
-            border-radius: 10px;
-        }
-
-        .questions-list::-webkit-scrollbar-thumb {
-            background: #9333ea;
-            border-radius: 10px;
-        }
-
-        .questions-list::-webkit-scrollbar-thumb:hover {
-            background: #7c3aed;
-        }
-    </style>
+    <title>KS Portfolio - KONA SUJEET</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-top">
-                <div class="header-left">
-                    <i class="fas fa-brain brain-icon"></i>
-                    <div class="header-title">
-                        <h1>Artificial Neural Networks Quiz</h1>
-                        <p>Interactive Learning Tool for UG/PG Students</p>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="score-box">
-                        <i class="fas fa-trophy"></i>
-                        <div class="score-number"><span id="score">0</span>/30</div>
-                        <div class="score-label">Score</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Progress Bar -->
-            <div class="progress-section">
-                <div class="progress-info">
-                    <span>Progress: <span id="attempted">0</span>/30 questions</span>
-                    <span id="progress-percent">0%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
-                </div>
-            </div>
+
+    <!-- Header and Navigation -->
+    <header>
+        <div class="logo">
+            <span class="ks">KS</span> Portfolio
         </div>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#achievements">Achievements</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
 
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Questions List -->
-            <div class="questions-list">
-                <div class="questions-header">
-                    <i class="fas fa-book-open"></i>
-                    <h2>30 Questions</h2>
+    <main>
+        <!-- 1. HERO SECTION -->
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1>KONA SUJEET</h1>
+                <p class="role-title">Software Developer</p>
+                <p class="description">
+                    Passionate Electronics and commiunication Engineering student building scalable, accessible products. Experienced in MERN stack, data-driven problem solving & leadership.
+                </p>
+                <div class="hero-actions">
+                    <a href="" class="btn primary-btn">View Projects</a>
+                    <a href="tel:+916303029287" class="btn secondary-btn">Contact</a>
                 </div>
-                <div id="questions-container"></div>
+            </div>
+            <div class="hero-image">
+                <!-- Placeholder for Profile Image -->
+                <img src="" alt="SUJEET Profile" onerror="this.src=''">
+            </div>
+        </section>
+
+        <!-- 2. ABOUT ME SECTION -->
+        <section id="about" class="about-me-section">
+            <div class="about-content">
+                <p>
+                    I am KONA SUJEET, a passionate **ELECTRONICS AND  Engineering** student from Visakhapatnam, Andhra Pradesh, currently pursuing my B.Tech at Vignan Institute of Information Technology. With a strong foundation in full-stack development and machine learning, I'm dedicated to creating innovative technological solutions that make a meaningful impact.
+                </p>
+
+                <p>
+                    My journey in technology began during my inter studies, where I achieved 94% and discovered my passion for programming. Since then, I've been committed to continuous learning and skill development. As a **MERN Stack Developer**, I specialize in building scalable web applications using React.js, Node.js, Express.js, and MongoDB, with additional expertise in **Python** for data science and automation.
+                </p>
+
+                <p>
+                    I gained valuable  experience through my friends, and I did real world projects in my current vignan clg as a developer where I contributed to developing web aplications and user interfaces. 
+                </p>
+
+                <p>
+                    Currently I am doing another project to momitoring and controlling electrical appliances in my clg, I actively contribute to the tech community by attending hackathons, technical workshops, and getting suggested by senior developers. I believe in collaborative learning and knowledge sharing to foster innovation.
+                </p>
             </div>
 
-            <!-- Question Display -->
-            <div class="question-display" id="question-display">
-                <div class="welcome-screen">
-                    <i class="fas fa-brain welcome-icon"></i>
-                    <h3 class="welcome-title">🎓 Start Your Learning Journey!</h3>
-                    <p class="welcome-text">Click any question to test your knowledge on Artificial Neural Networks</p>
-                    <div class="category-grid" id="category-grid"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p class="footer-title">🎓 Master Artificial Neural Networks | 🧠 30 Comprehensive Questions | ⚡ Instant Visual Feedback</p>
-            <p class="footer-subtitle">✅ Green = Correct Answer | ❌ Red = Wrong Answer | Click, Learn, and Excel!</p>
-        </div>
-    </div>
-
-    <script>
-        const questions = [
-            {
-                id: 1,
-                category: "Neural Networks Basics",
-                question: "What are Artificial Neural Networks (ANNs) designed to mimic?",
-                options: [
-                    "Computer algorithms",
-                    "The structure and function of the nervous system",
-                    "Mathematical equations",
-                    "Database systems"
-                ],
-                correct: 1,
-                explanation: "ANNs are designed to mimic the structure and function of the biological nervous system, particularly how neurons process and transmit information."
-            },
-            {
-                id: 2,
-                category: "Biological Neurons",
-                question: "Which part of a biological neuron receives signals from other neurons?",
-                options: ["Axon", "Soma", "Dendrites", "Synapse"],
-                correct: 2,
-                explanation: "Dendrites are the branched extensions of neurons that receive signals from other neurons and transmit them to the cell body (soma)."
-            },
-            {
-                id: 3,
-                category: "Biological Neurons",
-                question: "What is the function of the Soma (cell body) in a biological neuron?",
-                options: [
-                    "Transmits signals to other cells",
-                    "Receives incoming signals",
-                    "Sums all the incoming signals",
-                    "Connects two neurons"
-                ],
-                correct: 2,
-                explanation: "The Soma (cell body) processes and sums all the incoming signals from dendrites before determining whether to fire an action potential."
-            },
-            {
-                id: 4,
-                category: "Neural Networks Architecture",
-                question: "In an Artificial Neural Network, where is knowledge stored?",
-                options: [
-                    "In the input layer",
-                    "In the activation function",
-                    "Within the interconnection strengths known as synaptic weights",
-                    "In the output layer only"
-                ],
-                correct: 2,
-                explanation: "Knowledge in ANNs is stored in the synaptic weights, which represent the strength of connections between neurons and are adjusted during training."
-            },
-            {
-                id: 5,
-                category: "Network Types",
-                question: "What type of network allows information to move only in one direction from input to output?",
-                options: [
-                    "Recurrent network",
-                    "Feedforward network",
-                    "Feedback network",
-                    "Circular network"
-                ],
-                correct: 1,
-                explanation: "Feedforward networks allow information to flow in one direction only, from input layer through hidden layers to output layer without loops."
-            },
-            {
-                id: 6,
-                category: "Perceptron",
-                question: "Which type of perceptron can only learn linear functions?",
-                options: [
-                    "Multi-layer perceptron",
-                    "Deep neural network",
-                    "Single layer perceptron",
-                    "Convolutional neural network"
-                ],
-                correct: 2,
-                explanation: "Single layer perceptrons are limited to learning linearly separable functions and cannot solve non-linear problems like XOR."
-            },
-            {
-                id: 7,
-                category: "History",
-                question: "Who invented the perceptron?",
-                options: [
-                    "Alan Turing",
-                    "John McCarthy",
-                    "Frank Rosenblatt",
-                    "Geoffrey Hinton"
-                ],
-                correct: 2,
-                explanation: "Frank Rosenblatt invented the perceptron in 1957, which was one of the first artificial neural network models."
-            },
-            {
-                id: 8,
-                category: "History",
-                question: "In what year was the perceptron invented?",
-                options: ["1945", "1957", "1965", "1980"],
-                correct: 1,
-                explanation: "The perceptron was invented by Frank Rosenblatt in 1957, marking an important milestone in artificial intelligence."
-            },
-            {
-                id: 9,
-                category: "Neural Network Components",
-                question: "What is the primary purpose of bias in a neural network?",
-                options: [
-                    "To increase computation time",
-                    "To shift the decision boundary",
-                    "To reduce the number of neurons",
-                    "To eliminate weights"
-                ],
-                correct: 1,
-                explanation: "Bias allows the activation function to shift left or right, helping the model fit the data better by adjusting the decision boundary."
-            },
-            {
-                id: 10,
-                category: "Activation Functions",
-                question: "Which activation function produces output values between 0 and 1?",
-                options: ["ReLU", "Tanh", "Sigmoid", "Linear"],
-                correct: 2,
-                explanation: "The Sigmoid activation function produces outputs in the range (0, 1), making it useful for probability predictions."
-            },
-            {
-                id: 11,
-                category: "Activation Functions",
-                question: "What is the range of output values for the Tanh activation function?",
-                options: [
-                    "0 to 1",
-                    "-1 to +1",
-                    "0 to infinity",
-                    "-infinity to +infinity"
-                ],
-                correct: 1,
-                explanation: "The Tanh (hyperbolic tangent) function outputs values in the range (-1, +1), centered around zero."
-            },
-            {
-                id: 12,
-                category: "Activation Functions",
-                question: "What does ReLU stand for?",
-                options: [
-                    "Rectified Linear Unit",
-                    "Regulated Linear Unity",
-                    "Random Linear Update",
-                    "Recursive Linear Unit"
-                ],
-                correct: 0,
-                explanation: "ReLU stands for Rectified Linear Unit, one of the most popular activation functions that outputs max(0, x)."
-            },
-            {
-                id: 13,
-                category: "Network Layers",
-                question: "Which layer in a neural network does NOT perform any computation?",
-                options: [
-                    "Hidden layer",
-                    "Output layer",
-                    "Input layer",
-                    "Fully connected layer"
-                ],
-                correct: 2,
-                explanation: "The input layer simply receives and passes the input features to the network without performing any computations."
-            },
-            {
-                id: 14,
-                category: "Perceptron Limitations",
-                question: "What problem demonstrates the limitation of single-layer perceptrons?",
-                options: [
-                    "AND problem",
-                    "OR problem",
-                    "XOR problem",
-                    "NOT problem"
-                ],
-                correct: 2,
-                explanation: "The XOR problem cannot be solved by single-layer perceptrons as it is not linearly separable, demonstrating their limitation."
-            },
-            {
-                id: 15,
-                category: "Learning Algorithm",
-                question: "In the perceptron learning algorithm, what is the first step?",
-                options: [
-                    "Calculate the error",
-                    "Pass features as input to perceptrons",
-                    "Apply activation function",
-                    "Adjust weights"
-                ],
-                correct: 1,
-                explanation: "The first step in the perceptron learning algorithm is to pass the input features to the perceptron for processing."
-            },
-            {
-                id: 16,
-                category: "Activation Functions",
-                question: "What is the equation for a Binary Step Function when x > 0?",
-                options: ["f(x) = 0", "f(x) = 1", "f(x) = x", "f(x) = -1"],
-                correct: 1,
-                explanation: "In a Binary Step Function, f(x) = 1 when x > 0, and f(x) = 0 when x ≤ 0, creating a threshold activation."
-            },
-            {
-                id: 17,
-                category: "Activation Functions",
-                question: "Which activation function is most widely used in hidden layers?",
-                options: ["Sigmoid", "Linear", "ReLU", "Binary Step"],
-                correct: 2,
-                explanation: "ReLU is the most widely used activation function in hidden layers due to its computational efficiency and ability to mitigate vanishing gradient problems."
-            },
-            {
-                id: 18,
-                category: "Backpropagation",
-                question: "What does backpropagation algorithm help to adjust in a neural network?",
-                options: [
-                    "Input values",
-                    "Weights of neurons",
-                    "Number of layers",
-                    "Activation functions"
-                ],
-                correct: 1,
-                explanation: "Backpropagation adjusts the weights of neurons by calculating gradients and propagating errors backward through the network."
-            },
-            {
-                id: 19,
-                category: "Backpropagation",
-                question: "In which direction does backpropagation travel through the network?",
-                options: [
-                    "Forward from input to output",
-                    "Backward from output to input",
-                    "Randomly between layers",
-                    "Only in hidden layers"
-                ],
-                correct: 1,
-                explanation: "Backpropagation travels backward from the output layer to the input layer, propagating error gradients to update weights."
-            },
-            {
-                id: 20,
-                category: "Deep Learning",
-                question: "What is Deep Learning based on?",
-                options: [
-                    "Decision trees",
-                    "Artificial neural networks",
-                    "Linear regression",
-                    "Rule-based systems"
-                ],
-                correct: 1,
-                explanation: "Deep Learning is based on artificial neural networks with multiple layers (deep architectures) that can learn hierarchical representations."
-            },
-            {
-                id: 21,
-                category: "Brain Facts",
-                question: "Approximately how many neurons are in the human brain?",
-                options: ["1 billion", "10 billion", "100 billion", "1 trillion"],
-                correct: 2,
-                explanation: "The human brain contains approximately 100 billion neurons, each connected to thousands of other neurons."
-            },
-            {
-                id: 22,
-                category: "ML Hierarchy",
-                question: "Which of the following is a subset of Machine Learning?",
-                options: [
-                    "Artificial Intelligence",
-                    "Deep Learning",
-                    "Computer Vision",
-                    "Data Mining"
-                ],
-                correct: 1,
-                explanation: "Deep Learning is a subset of Machine Learning that uses neural networks with multiple layers to learn complex patterns."
-            },
-            {
-                id: 23,
-                category: "CNN",
-                question: "What does CNN stand for?",
-                options: [
-                    "Complex Neural Network",
-                    "Convolutional Neural Network",
-                    "Computational Neural Network",
-                    "Connected Neural Network"
-                ],
-                correct: 1,
-                explanation: "CNN stands for Convolutional Neural Network, a specialized architecture designed for processing grid-like data such as images."
-            },
-            {
-                id: 24,
-                category: "CNN",
-                question: "What type of data is CNN specifically designed to process?",
-                options: [
-                    "Text data",
-                    "Audio data",
-                    "Pixel data/Images",
-                    "Numerical data only"
-                ],
-                correct: 2,
-                explanation: "CNNs are specifically designed to process pixel data and images, leveraging spatial hierarchies in visual data."
-            },
-            {
-                id: 25,
-                category: "CNN Operations",
-                question: "In CNN, what operation involves sliding a filter across the input image?",
-                options: ["Pooling", "Convolution", "Activation", "Normalization"],
-                correct: 1,
-                explanation: "Convolution involves sliding a filter (kernel) across the input image to extract features and create feature maps."
-            },
-            {
-                id: 26,
-                category: "CNN Layers",
-                question: "What is the main function of a pooling layer in CNN?",
-                options: [
-                    "To increase image size",
-                    "To reduce computation and prevent overfitting",
-                    "To add more features",
-                    "To change color channels"
-                ],
-                correct: 1,
-                explanation: "Pooling layers downsample feature maps to reduce computational cost, prevent overfitting, and provide spatial invariance."
-            },
-            {
-                id: 27,
-                category: "Output Layer",
-                question: "Which activation function is commonly used in the output layer for binary classification?",
-                options: ["ReLU", "Tanh", "Sigmoid", "Linear"],
-                correct: 2,
-                explanation: "Sigmoid is commonly used in the output layer for binary classification as it produces probability values between 0 and 1."
-            },
-            {
-                id: 28,
-                category: "Deep Learning Architectures",
-                question: "What is the full form of DBN in deep learning architectures?",
-                options: [
-                    "Deep Brain Network",
-                    "Deep Belief Network",
-                    "Dense Base Network",
-                    "Dynamic Binary Network"
-                ],
-                correct: 1,
-                explanation: "DBN stands for Deep Belief Network, a type of generative model composed of multiple layers of latent variables."
-            },
-            {
-                id: 29,
-                category: "CNN Layers",
-                question: "Which layer in CNN is responsible for computing class scores?",
-                options: [
-                    "Input layer",
-                    "Convolution layer",
-                    "Pooling layer",
-                    "Fully-connected layer"
-                ],
-                correct: 3,
-                explanation: "The fully-connected (dense) layer at the end of CNN computes class scores for classification tasks."
-            },
-            {
-                id: 30,
-                category: "Training Parameters",
-                question: "What is the typical learning rate parameter used in neural network training?",
-                options: [
-                    "It determines the number of neurons",
-                    "It controls how much weights are adjusted during training",
-                    "It sets the number of layers",
-                    "It defines the activation function"
-                ],
-                correct: 1,
-                explanation: "The learning rate controls the step size of weight updates during training, affecting how quickly the model learns."
-            }
-        ];
-
-        let selectedQuestion = null;
-        let selectedAnswer = null;
-        let feedback = null;
-        let score = 0;
-        let attempted = new Set();
-        let attemptedResults = {}; // Track correct/wrong for each question
-
-        // Initialize
-        function init() {
-            renderQuestionsList();
-            renderCategories();
-        }
-
-        // Render questions list
-        function renderQuestionsList() {
-            const container = document.getElementById('questions-container');
-            container.innerHTML = '';
-            
-            questions.forEach(q => {
-                const btn = document.createElement('button');
-                btn.className = 'question-item';
-                
-                if (selectedQuestion && selectedQuestion.id === q.id) {
-                    btn.className += ' selected';
-                } else if (attempted.has(q.id)) {
-                    // Check if this question was answered correctly or incorrectly
-                    if (attemptedResults[q.id] === true) {
-                        btn.className += ' attempted';
-                    } else {
-                        btn.className += ' attempted-wrong';
-                    }
-                } else {
-                    btn.className += ' default';
-                }
-                
-                btn.onclick = () => handleQuestionClick(q);
-                
-                const iconHTML = attempted.has(q.id) 
-                    ? (attemptedResults[q.id] === true 
-                        ? '<i class="fas fa-check-circle check-icon"></i>' 
-                        : '<i class="fas fa-times-circle check-icon"></i>')
-                    : '';
-                
-                btn.innerHTML = `
-                    <div class="question-item-header">
-                        <span class="question-number">Q${q.id}</span>
-                        ${iconHTML}
-                    </div>
-                    <div class="question-category">${q.category}</div>
-                `;
-                
-                container.appendChild(btn);
-            });
-        }
-
-        // Render categories
-        function renderCategories() {
-            const categories = [...new Set(questions.map(q => q.category))];
-            const container = document.getElementById('category-grid');
-            container.innerHTML = '';
-            
-            categories.slice(0, 6).forEach(cat => {
-                const badge = document.createElement('div');
-                badge.className = 'category-badge';
-                badge.textContent = cat;
-                container.appendChild(badge);
-            });
-        }
-
-        // Handle question click
-        function handleQuestionClick(q) {
-            selectedQuestion = q;
-            selectedAnswer = null;
-            feedback = null;
-            renderQuestionDisplay();
-            renderQuestionsList();
-        }
-
-        // Render question display
-        function renderQuestionDisplay() {
-            const display = document.getElementById('question-display');
-            
-            if (!selectedQuestion) {
-                display.innerHTML = `
-                    <div class="welcome-screen">
-                        <i class="fas fa-brain welcome-icon"></i>
-                        <h3 class="welcome-title">🎓 Start Your Learning Journey!</h3>
-                        <p class="welcome-text">Click any question to test your knowledge on Artificial Neural Networks</p>
-                        <div class="category-grid" id="category-grid"></div>
-                    </div>
-                `;
-                renderCategories();
-                return;
-            }
-
-            let optionsHTML = '';
-            selectedQuestion.options.forEach((option, idx) => {
-                let btnClass = 'option-btn';
-                let iconHTML = '';
-                
-                if (feedback) {
-                    btnClass += ' disabled';
-                    if (selectedAnswer === idx) {
-                        if (feedback.correct) {
-                            btnClass = 'option-btn correct';
-                            iconHTML = '<i class="fas fa-check-circle option-icon"></i>';
-                        } else {
-                            btnClass = 'option-btn incorrect';
-                            iconHTML = '<i class="fas fa-times-circle option-icon"></i>';
-                        }
-                    } else if (idx === selectedQuestion.correct) {
-                        btnClass = 'option-btn show-correct';
-                        iconHTML = '<i class="fas fa-check-circle option-icon"></i>';
-                    }
-                }
-                
-                optionsHTML += `
-                    <button class="${btnClass}" onclick="handleAnswerClick(${idx})" ${feedback ? 'disabled' : ''}>
-                        <span class="option-letter">${String.fromCharCode(65 + idx)}</span>
-                        <span class="option-text">${option}</span>
-                        ${iconHTML}
-                    </button>
-                `;
-            });
-
-            let feedbackHTML = '';
-            if (feedback) {
-                const feedbackClass = feedback.correct ? 'correct' : 'incorrect';
-                const feedbackIconClass = feedback.correct ? 'correct' : 'incorrect';
-                const feedbackIcon = feedback.correct ? 'fa-check-circle' : 'fa-times-circle';
-                const feedbackTitle = feedback.correct ? '✅ Correct! Excellent Work! 🎉' : '❌ Incorrect! Keep Learning! 📚';
-                
-                feedbackHTML = `
-                    <div class="feedback-box ${feedbackClass}">
-                        <div class="feedback-header">
-                            <i class="fas ${feedbackIcon} feedback-icon ${feedbackIconClass}"></i>
-                            <span class="feedback-title ${feedbackClass}">${feedbackTitle}</span>
+            <div class="quick-info-block">
+                <!-- Quick Stats and Core Values Container -->
+                <div class="info-columns">
+                    <div class="quick-stats">
+                        <h3>Quick Stats</h3>
+                        <div class="stat-item"><p>Experience</p></div>
+                        <div class="stat-item"><p>Projects Completed</p></div>
+                        <div class="stat-item"><p>Current Goals</p></div>
+                        <div class="stat-item"><p>Coding Competitions</p></div>
+                        <!-- Data -->
+                        <div class="stat-data">
+                            <p>1+ Years</p>
+                            <p>30+</p>
+                            <p>4+</p>
+                            <p>5+</p>
                         </div>
-                        <p class="feedback-text"><strong>Explanation:</strong> ${selectedQuestion.explanation}</p>
                     </div>
-                `;
-            }
 
-            display.innerHTML = `
-                <div class="question-content">
-                    <div class="category-badge-top">${selectedQuestion.category}</div>
-                    <h3 class="question-title">Question ${selectedQuestion.id} of ${questions.length}</h3>
-                    <p class="question-text">${selectedQuestion.question}</p>
+                    <div class="core-values">
+                        <h3>Core Values</h3>
+                        <ul>
+                            <li>Innovation & Creativity</li>
+                            <li>Collaboration & Teamwork</li>
+                            <li>Continuous Learning</li>
+                            <li>Quality & Clean Code</li>
+                            <li>Sustainable Solutions</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="options-container">
-                    ${optionsHTML}
+
+                <!-- Interests Section -->
+                <div class="interests-block">
+                    <h3>Interests</h3>
+                    <div class="tag-cloud">
+                        <span class="interest-tag">Web & Blockchain</span>
+                        <span class="interest-tag">Data Mining & Processing</span>
+                        <span class="interest-tag">Competitive Programming</span>
+                        <span class="interest-tag">Hackathons & Tech Talks</span>
+                        <span class="interest-tag">Photography</span>
+                        <span class="interest-tag">Reading</span>
+                    </div>
                 </div>
-                ${feedbackHTML}
-            `;
-        }
+            </div>
+        </section>
 
-        // Handle answer click
-        function handleAnswerClick(index) {
-            if (feedback) return;
+        <!-- 3. WHAT I DO SECTION -->
+        <section class="what-i-do-section">
+            <h2>What I Do</h2>
             
-            selectedAnswer = index;
-            const isCorrect = index === selectedQuestion.correct;
-            feedback = { correct: isCorrect };
-            
-            if (!attempted.has(selectedQuestion.id)) {
-                attempted.add(selectedQuestion.id);
-                attemptedResults[selectedQuestion.id] = isCorrect; // Store if answer was correct
+            <div class="services-grid">
                 
-                if (isCorrect) {
-                    score++;
-                }
+                <div class="service-card">
+                    <h3>Full-Stack Development</h3>
+                    <p>Building end-to-end web applications with modern frameworks and best practices</p>
+                </div>
+
+                <div class="service-card">
+                    <h3>AI/ML Solutions</h3>
+                    <p>Developing intelligent systems and automation solutions using machine learning</p>
+                </div>
+
+                <div class="service-card highlight-green">
+                    <h3>Leadership & Mentoring</h3>
+                    <p>Leading technical teams and mentoring aspiring developers</p>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- 4. TECHNOLOGIES & SKILLS SECTION -->
+        <section id="skills" class="skills-section">
+            <h2 class="section-heading">Technologies & Skills</h2>
+            
+            <div class="skills-grid">
                 
-                updateScore();
-                updateProgress();
-            }
+                <div class="skill-item python-glow">
+                    <div class="skill-icon"><i class="fab fa-python"></i></div>
+                    <p>Python</p>
+                </div>
+                
+                <div class="skill-item js-glow">
+                    <div class="skill-icon"><i class="fab fa-js"></i></div>
+                    <p>JS</p>
+                </div>
+                
+                <div class="skill-item react-glow">
+                    <div class="skill-icon"><i class="fab fa-react"></i></div>
+                    <p>React</p>
+                </div>
+                
+                <div class="skill-item node-glow">
+                    <div class="skill-icon"><i class="fab fa-node-js"></i></div>
+                    <p>Node JS</p>
+                </div>
+                
+                <div class="skill-item html-glow">
+                    <div class="skill-icon"><i class="fab fa-html5"></i></div>
+                    <p>HTML</p>
+                </div>
+                
+                <div class="skill-item css-glow">
+                    <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
+                    <p>CSS</p>
+                </div>
+                
+                <div class="skill-item mongo-glow">
+                    <div class="skill-icon"><i class="fas fa-database"></i></div>
+                    <p>MongoDB</p>
+                </div>
+                
+                <div class="skill-item sql-glow">
+                    <div class="skill-icon"><i class="fas fa-server"></i></div>
+                    <p>SQL</p>
+                </div>
+
+                <div class="skill-item firebase-glow">
+                    <div class="skill-icon"><i class="fas fa-fire"></i></div>
+                    <p>Firebase</p>
+                </div>
+                
+                <div class="skill-item aws-glow">
+                    <div class="skill-icon"><i class="fab fa-aws"></i></div>
+                    <p>Amazon</p>
+                </div>
+                
+            </div>
             
-            renderQuestionDisplay();
-            renderQuestionsList();
-        }
-
-        // Update score
-        function updateScore() {
-            document.getElementById('score').textContent = score;
-        }
-
-        // Update progress
-        function updateProgress() {
-            const percentage = (attempted.size / questions.length) * 100;
-            document.getElementById('attempted').textContent = attempted.size;
-            document.getElementById('progress-percent').textContent = percentage.toFixed(0) + '%';
-            document.getElementById('progress-bar').style.width = percentage + '%';
-        }
-
-        // Reset quiz
-        function resetQuiz() {
-            selectedQuestion = null;
-            selectedAnswer = null;
-            feedback = null;
-            score = 0;
-            attempted = new Set();
-            attemptedResults = {};
+            <h2 id="achievements" class="section-heading certifications-heading">Certifications & Achievements</h2>
             
-            updateScore();
-            updateProgress();
-            renderQuestionDisplay();
-            renderQuestionsList();
-        }
+            <div class="certifications-grid">
+                <div class="certification-item">C Essentials 1 - Cisco</div>
+                <div class="certification-item"> - NPTEL</div>
+                <div class="certification-item">AWS certified solutions architect - AWS - Forage</div>
+                <div class="certification-item">Software Engineering job simulation - accenture - forage</div>
+                <div class="certification-item">GEN AI data analyst - TATA - forages</div>
+            </div>
+        </section>
 
-        // Initialize on page load
-        window.onload = init;
-    </script>
+        <!-- 5. FEATURED PROJECTS SECTION -->
+        <section id="projects" class="projects-section">
+            <h2 class="section-heading">Featured Projects</h2>
+            
+            <div class="projects-container">
+                
+                <!-- Project Card 1: AI- based crop recommendation -->
+                <div class="project-card">
+                    <div class="project-image">
+                        [Image Placeholder: Resume Analyzer UI]
+                    </div>
+                    
+                    <div class="project-details">
+                        <h3>AI-Based crop recommendation system</h3>
+                        <p>Web platform to predict the best crops for farmers based on the market, weather, and soil data  </p>
+                        
+                        <div class="tech-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Scikit-learn</span>
+                            <span class="tag">FastAPI</span>
+                            <span class="tag">ML algorithms</span>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <a href="" class="btn secondary-btn">View Project</a>
+                            <a href="https://devivaraprasad-183.github.io/sih/" class="btn github-btn">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2: Fresh farm direct -->
+                <div class="project-card">
+                    <div class="project-image">
+                        [Image Placeholder: College Website Homepage]
+                    </div>
+                    
+                    <div class="project-details">
+                        <h3>Fresh arm direct</h3>
+                        <p>It is a web platform that the farmer can sell products and user buy the products and It has a different login puposes to work in that app</p>
+                        
+                        <div class="tech-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JS</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <a href="" class="btn secondary-btn">View Project</a>
+                            <a href="" class="btn github-btn">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Card 3: Ai based learning path desiigner -->
+                <div class="project-card">
+                    <div class="project-image">
+                        [Image Placeholder: Food Sharing App UI]
+                    </div>
+                    
+                    <div class="project-details">
+                        <h3>AI based laern path designer</h3>
+                        <p>It is a platfrom where user can get any type og raodmaps like full-stack dev, data analyst, cybersercurity </p>
+                        
+                        <div class="tech-tags">
+                            <span class="tag">HTML</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">JS</span>
+                            <span class="tag">python</span>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <a href="#" class="btn secondary-btn">View Project</a>
+                            <a href="#" class="btn github-btn">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- 6. GET IN TOUCH / CONTACT SECTION -->
+        <section id="contact" class="contact-section">
+            <h2 class="section-heading">Get In Touch</h2>
+            
+            <div class="contact-container">
+                
+                <!-- Left Column: Send Me a Message (Contact Form) -->
+                <div class="contact-form-block">
+                    <h3>Send Me a Message</h3>
+                    
+                    <form action="#" method="POST" class="contact-form">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Your Name">
+                        
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                        
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Your message here..."></textarea>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+                
+                <!-- Right Column: Contact Information -->
+                <div class="contact-info-block-final">
+                    <h3>Contact Information</h3>
+                    
+                    <div class="info-card email-card">
+                        <i class="fas fa-envelope icon"></i>
+                        <div class="details">
+                            <p class="main-text">sujithk73372@gmail.com</p>
+                            <p class="sub-text">For professional inquiries</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card phone-card">
+                        <i class="fas fa-phone-alt icon"></i>
+                        <div class="details">
+                            <p class="main-text">+91-6303029287</p>
+                            <p class="sub-text">Available 9 AM - 9 PM IST</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card location-card">
+                        <i class="fas fa-map-marker-alt icon"></i>
+                        <div class="details">
+                            <p class="main-text">Visakhapatnam, Andhra Pradesh</p>
+                            <p class="sub-text">Open to remote work</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card message-card">
+                        <i class="fas fa-comment-alt icon"></i>
+                        <div class="details">
+                            <p class="main-text">+91-6303029287</p>
+                            <p class="sub-text">Quick messages</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 7. CONNECT WITH ME SECTION -->
+        <section class="connect-with-me-section">
+            <div class="connect-content-wrapper">
+                
+                <div class="connect-text">
+                    <h2>Connect With Me</h2>
+                    <p>Ready to **collaborate on your next big project**? Whether you need a web application, digital strategy, or technical consultation, I'm here to help bring your vision to life.</p>
+                    <p>Passionate about creating innovative digital experiences that drive results and solve real-world problems. Let's build something extraordinary together!</p>
+                </div>
+                
+                <div class="links-grid">
+                    
+                    <a href="https://www.linkedin.com/in/sujith-k-6088b3374?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="link-card linkedin-card">
+                        <i class="fab fa-linkedin icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">LinkedIn</p>
+                            <p class="link-desc">Connect professionally</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/sujith777k" target="_blank" class="link-card github-card">
+                        <i class="fab fa-github icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">GitHub</p>
+                            <p class="link-desc">View my repositories</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.instagram.com/suzzt._k_" target="_blank" class="link-card instagram-card">
+                        <i class="fab fa-instagram icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">Instagram</p>
+                            <p class="link-desc">Follow my journey</p>
+                        </div>
+                    </a>
+                    
+                    <a href="YOUR_TWITTER_URL" target="_blank" class="link-card twitter-card">
+                        <i class="fab fa-twitter icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">Twitter</p>
+                            <p class="link-desc">Tech updates & thoughts</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.codechef.com/users/real_fleck_19" target="_blank" class="link-card codechef-card">
+                        <i class="fas fa-hat-wizard icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">CodeChef</p>
+                            <p class="link-desc">Competitive programming</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://leetcode.com/u/KONA_SUJEET/" target="_blank" class="link-card leetcode-card">
+                        <i class="fas fa-terminal icon"></i>
+                        <div class="link-details">
+                            <p class="link-title">LeetCode</p>
+                            <p class="link-desc">Problem solving</p>
+                        </div>
+                    </a>
+                    
+                </div>
+                
+                <div class="availability-banner">
+                    <p class="status-text">✅ **Available for Projects**</p>
+                    <p class="call-to-action">Ready to Innovate? <span class="light-text">Currently accepting new projects and opportunities. Let's discuss.</span></p>
+                </div>
+                
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            
+            <!-- Column 1: About This Site -->
+            <div class="footer-col about-site">
+                <h4>About This Site</h4>
+                <p>Portfolio of **KONA SUJEET**, Full-stack engineering, leadership & community impact—built with performance & accessibility focus.</p>
+                <div class="footer-social-icons">
+                    <a href="https://www.linkedin.com/in/sujith-k-6088b3374?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/sujith777k"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#achievements">Achievements</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <!-- Column 3: Contact Information -->
+            <div class="footer-col contact-info-footer">
+                <h4>Contact</h4>
+                <p>
+                    <i class="fas fa-envelope"></i> <a href="mailto:sujithk73372@gmail.com">sujithk73372@gmail.com</a>
+                </p>
+                <p>
+                    <i class="fas fa-phone-alt"></i> <a href="tel:+916303029287">+91 6303029287</a>
+                </p>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i> Visakhapatnam, India
+                </p>
+            </div>
+
+        </div>
+        
+        <!-- Bottom Bar: Copyright and Last Updated -->
+        <div class="footer-bottom">
+            <p class="copyright">
+                © 2025 KONA SUJEET. All rights reserved.
+            </p>
+            <p class="last-updated">
+                Last updated Oct 2025
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
